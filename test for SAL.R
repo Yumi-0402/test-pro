@@ -39,12 +39,12 @@ cluster_dtw_h[[4]]@clusinfo
 # plot dendrogram for k= 4
 plot(cluster_dtw_h[[4]])
 #  The series and the obtained prototypes can be plotted too
-plot(cluster_dtw_h[[4]], type = "sc")
+plot(cluster_dtw_h[[]], type = "sc")
 # the representative prototype 
 plot(cluster_dtw_h[[4]], type = "centroid")
 
 
-
+##reference :http://rstudio-pubs-static.s3.amazonaws.com/398402_abe1a0343a4e4e03977de8f3791e96bb.html
 
 
 
