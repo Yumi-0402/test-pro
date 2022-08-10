@@ -19,7 +19,7 @@ Dbneat <- Db[,c(5,21,22)]
 str(Dbneat)
 Db2 <- mutate(Dbneat,CellID = as.character(CellID))
 
-#plot by cellid 
+#plot by cellid （better not to run this, too many plots ...
 Db2  %>% 
     ggplot(aes(x=Date, y= SAL_avg, color= CellID))+
     geom_line(size= 0.2)+
