@@ -1,0 +1,80 @@
+---
+title: "Test"
+author: "HONG"
+date: "8/9/2022"
+output: pdf_document
+
+---
+```{r}
+library(tidyr)
+library(dtwclust)
+library(dplyr)
+library(ggplot2)
+library(reshape)
+#read dateset 
+Db <- read.csv("rawdata/rca_data_2012_2022-06-29.csv")
+# cut the unnecessary columns 
+Dbneat <- Db[,c(5,21,22)]
+#check and change the variable type
+str(Dbneat)
+Db2 <- mutate(Dbneat,CellID = as.character(CellID))
+
+#plot by cellid 
+Db2  %>% 
+    ggplot(aes(x=Date, y= SAL_avg, color= CellID))+
+    geom_line(size= 0.2)+
+    ggtitle("Control chart sequences") +
+    facet_wrap(~ CellID, scales = 'free_x', nrow = 2)
+df_list <- as.list(utils::unstack(Db2, SAL_avg ~ CellID))
+df_list_z <- dtwclust::zscore(df_list)
+
+#hierarchical clustering with 10% window size for up to k=10 clusters
+cluster_dtw_h <- list()
+for (i in 2:3386)
+{cluster_dtw_h[[i]] <- tsclust(df_list_z, type = "h", k = i,  distance = "dtw", control = hierarchical_control(method = "complete"), seed = 390, preproc = NULL, args = tsclust_args(dist = list(window.size = 5L)))
+}
+# take a look at the object
+cluster_dtw_h[[20]]
+# some cluster information
+cluster_dtw_h[[4]]@clusinfo
+# plot dendrogram for k= 4
+plot(cluster_dtw_h[[4]])
+#  The series and the obtained prototypes can be plotted too
+plot(cluster_dtw_h[[4]], type = "sc")
+# the representative prototype 
+plot(cluster_dtw_h[[4]], type = "centroid")
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+```{r,echo=FALSE}
+Db <-read.csv("~/Desktop/ML-Hong/test pro/rawdata/benthos_biomass.csv")
+summary(Db)
+```
+
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+$ git clone https://github.com/username/repo.git
+Username: Yumi-0402
+Password: ghp_yoZn1Cmpe8UzEheew6JLlJW25jZcV01jqd4
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
